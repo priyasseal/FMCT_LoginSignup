@@ -45,20 +45,21 @@
 <body>
   <h1>Create Your FMCT Account</h1>
 
+  <!-- ⭐ ADD THIS -->
+  <input type="text" id="name" placeholder="Name">
+
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
   <button id="signupBtn">Sign Up</button>
 
   <p id="status"></p>
 
-  <!-- ✅ Firebase SDKs (compat versions) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-
   <script>
-    // 🔹 Your Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
       authDomain: "fmct-58e22.firebaseapp.com",
@@ -68,13 +69,12 @@
       appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
     };
 
-    // 🔹 Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // 🔹 Handle signup
     document.getElementById("signupBtn").onclick = async function() {
+      const name = document.getElementById("name").value;   // ⭐ NEW
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const status = document.getElementById("status");
@@ -82,18 +82,19 @@
       status.innerHTML = "⏳ Creating account...";
 
       try {
-        // Create user in Firebase Auth
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // Save user info in Firestore
+        // ⭐ SAVE NAME IN FIRESTORE
         await db.collection("users").doc(user.uid).set({
+          name: name,
           email: email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         status.innerHTML = "✅ Signup successful! Redirecting...";
-        setTimeout(() => window.location.href = "index.html", 1500);
+        setTimeout(() => window.location.href = "index.html", 1000);
+
       } catch (error) {
         status.innerHTML = "❌ " + error.message;
       }
