@@ -19,6 +19,8 @@
       text-align: center;
       transform: scale(1.05);
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+      position: relative;
+      z-index: 1;
     }
 
     /* --- BUNS --- */
@@ -49,6 +51,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+      z-index: 2;
     }
 
     .lettuce {
@@ -80,7 +84,7 @@
       align-items: center;
     }
 
-    /* --- BUTTONS --- */
+    /* --- BUTTONS (REAL LINKS) --- */
     .tomato-btn, .cheese-btn {
       display: block;
       width: 90%;
@@ -95,6 +99,8 @@
       text-align: center;
       transition: 0.2s;
       box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 3;
     }
 
     .tomato-btn {
@@ -110,6 +116,13 @@
     .tomato-btn:hover,
     .cheese-btn:hover {
       transform: scale(1.05);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #5a2e00;
+      text-align: center;
     }
   </style>
 </head>
@@ -128,9 +141,11 @@
       <div id="userStatus">Checking login status...</div>
     </div>
 
-    <!-- FIXED BUTTONS -->
-    <a class="tomato-btn" id="loginBtn" href="login.html">Login</a>
-    <a class="cheese-btn" id="signupBtn" href="signup.html">Sign Up</a>
+    <!-- ✅ REAL LINKS THAT ALWAYS WORK -->
+    <a class="tomato-btn" id="loginBtn" href="./login.html">Login</a>
+    <a class="cheese-btn" id="signupBtn" href="./signup.html">Sign Up</a>
+
+    <!-- Logout stays a button -->
     <button class="tomato-btn" id="logoutBtn" style="display:none;">Logout</button>
 
     <div class="patty"></div>
