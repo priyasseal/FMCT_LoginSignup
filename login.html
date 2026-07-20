@@ -33,7 +33,12 @@ const firebaseConfig = {
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+// const auth = firebase.auth();
+
+        // 🔹 Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
 function login() {
     let email = document.getElementById("email").value;
