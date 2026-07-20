@@ -1,101 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FMCT Home</title>
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #ffe9b3;
-            padding: 40px;
-        }
-        .button {
-            display: block;
-            margin: 15px auto;
-            padding: 14px;
-            width: 250px;
-            background-color: #ffcc33;
-            color: #5a2e00;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: bold;
-            border: 2px solid #ff9900;
-            font-size: 18px;
-        }
-    </style>
+  <title>FMCT Burger Home</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #ffe9b3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .burger {
+      width: 400px;
+      text-align: center;
+    }
+
+    .bun-top {
+      background: #f7c56f;
+      height: 80px;
+      border-radius: 50px 50px 20px 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
+    }
+
+    .patty {
+      background: #8b4513;
+      color: #ffe9b3;
+      border-radius: 20px;
+      padding: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .tomato-btn, .cheese-btn {
+      display: block;
+      width: 90%;
+      padding: 14px;
+      margin: 10px auto;
+      border-radius: 20px;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .tomato-btn {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .tomato-btn:hover {
+      background: #ff8a8a;
+      transform: scale(1.05);
+    }
+
+    .cheese-btn {
+      background: #ffd84d;
+      color: #5a2e00;
+    }
+
+    .cheese-btn:hover {
+      background: #ffe27f;
+      transform: scale(1.05);
+    }
+
+    .bun-bottom {
+      background: #f7c56f;
+      height: 70px;
+      border-radius: 20px 20px 50px 50px;
+      margin-top: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1 id="welcomeText">Welcome</h1>
-    <p id="userStatus">Checking login status...</p>
+  <div class="burger">
 
-    <a id="loginBtn" class="button" href="login.html">Login</a>
-    <a id="signupBtn" class="button" href="signup.html">Sign Up</a>
-    <button id="logoutBtn" class="button" style="display:none;">Logout</button>
+    <div class="bun-top"></div>
 
-    <!-- Firebase SDKs -->
-   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <div class="patty" id="welcomeText">Welcome!</div>
+    <div class="patty" id="userStatus">Checking login status...</div>
 
+    <a class="tomato-btn" id="loginBtn" href="login.html">🍅 Login</a>
+    <a class="cheese-btn" id="signupBtn" href="signup.html">🧀 Sign Up</a>
+    <button class="tomato-btn" id="logoutBtn" style="display:none;">🍅 Logout</button>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
-            authDomain: "fmct-58e22.firebaseapp.com",
-            projectId: "fmct-58e22",
-            storageBucket: "fmct-58e22.firebasestorage.app",
-            messagingSenderId: "479095036843",
-            appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
-        };
+    <div class="bun-bottom"></div>
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+  </div>
 
-        auth.onAuthStateChanged(async user => {
-            const userStatus = document.getElementById("userStatus");
-            const welcomeText = document.getElementById("welcomeText");
-            const loginBtn = document.getElementById("loginBtn");
-            const signupBtn = document.getElementById("signupBtn");
-            const logoutBtn = document.getElementById("logoutBtn");
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-            if (user) {
-                console.log("Auth state changed:", user); // Debugging line
+const firebaseConfig = {
+  apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
+  authDomain: "fmct-58e22.firebaseapp.com",
+  projectId: "fmct-58e22",
+  storageBucket: "fmct-58e22.firebasestorage.app",
+  messagingSenderId: "479095036843",
+  appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
+};
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-                let name = user.email; // Default fallback
-                try {
-                    const doc = await db.collection("users").doc(user.uid).get();
-                    if (doc.exists) {
-                        const data = doc.data();
-                        name = data?.name || user.email;
-                    }
-                } catch (e) {
-                    console.error("Firestore error:", e);
-                }
+    auth.onAuthStateChanged(async user => {
+      const welcomeText = document.getElementById("welcomeText");
+      const userStatus = document.getElementById("userStatus");
+      const loginBtn = document.getElementById("loginBtn");
+      const signupBtn = document.getElementById("signupBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
 
-                welcomeText.innerHTML = `Welcome, ${name}!`;
-                userStatus.innerHTML = `Logged in as: ${user.email}`;
+      if (user) {
+        const doc = await db.collection("users").doc(user.uid).get();
+        const data = doc.data();
 
-                loginBtn.style.display = "none";
-                signupBtn.style.display = "none";
-                logoutBtn.style.display = "block";
-            } else {
-                console.log("No user logged in."); // Debugging line
-                welcomeText.innerHTML = "Welcome";
-                userStatus.innerHTML = "You are not logged in.";
+        const fullName = `${data.firstName} ${data.lastName}`;
 
-                loginBtn.style.display = "block";
-                signupBtn.style.display = "block";
-                logoutBtn.style.display = "none";
-            }
-        });
+        welcomeText.innerHTML = `🍔 Welcome, ${fullName}!`;
+        userStatus.innerHTML = `Logged in as: ${data.email}`;
 
-        document.getElementById("logoutBtn").onclick = function() {
-            auth.signOut();
-        };
-    </script>
+        loginBtn.style.display = "none";
+        signupBtn.style.display = "none";
+        logoutBtn.style.display = "block";
+
+      } else {
+        welcomeText.innerHTML = "Welcome!";
+        userStatus.innerHTML = "You are not logged in.";
+
+        loginBtn.style.display = "block";
+        signupBtn.style.display = "block";
+        logoutBtn.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = function() {
+      auth.signOut();
+    };
+  </script>
 
 </body>
 </html>
