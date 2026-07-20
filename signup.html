@@ -74,8 +74,8 @@
         #5a2e00 8px,
         #5a2e00 16px
       );
-      color: #ffe9b3;
-      font-weight: bold;
+      border-radius: 30px;
+      height: 55px;
     }
 
     .bun-bottom {
@@ -125,9 +125,10 @@
     }
 
     #status {
-      margin-top: 10px;
+      margin-top: 20px;
       font-weight: bold;
-      color: #ffe9b3;
+      color: #5a2e00;
+      text-align: center;
     }
   </style>
 </head>
@@ -155,10 +156,14 @@
 
     <button class="signup-btn" id="signupBtn">🍅 Sign Up 🍅</button>
 
-    <div class="layer patty" id="status">Status Patty</div>
+    <!-- Patty is decorative only -->
+    <div class="patty"></div>
 
     <div class="bun-bottom"></div>
   </div>
+
+  <!-- Status BELOW burger -->
+  <p id="status"></p>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -166,7 +171,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
-const firebaseConfig = {
+    const firebaseConfig = {
   apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
   authDomain: "fmct-58e22.firebaseapp.com",
   projectId: "fmct-58e22",
@@ -174,7 +179,6 @@ const firebaseConfig = {
   messagingSenderId: "479095036843",
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
