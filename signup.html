@@ -34,6 +34,11 @@
       font-size: 18px;
       cursor: pointer;
     }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #5a2e00;
+    }
   </style>
 </head>
 
@@ -46,10 +51,10 @@
 
   <p id="status"></p>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+  <!-- ✅ Firebase SDKs (compat versions) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
     // 🔹 Your Firebase configuration
@@ -72,6 +77,8 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const status = document.getElementById("status");
+
+      status.innerHTML = "⏳ Creating account...";
 
       try {
         // Create user in Firebase Auth
