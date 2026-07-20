@@ -45,11 +45,12 @@
 <body>
   <h1>Create Your FMCT Account</h1>
 
-  <!-- ⭐ ADD THIS -->
-  <input type="text" id="name" placeholder="Name">
+  <!-- ⭐ NEW FIELDS -->
+  <input type="text" id="firstName" placeholder="First Name">
+  <input type="text" id="lastName" placeholder="Last Name">
 
   <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+  <input type="password" id="password" placeholder="Password (8–20 chars)">
   <button id="signupBtn">Sign Up</button>
 
   <p id="status"></p>
@@ -60,24 +61,45 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
-      authDomain: "fmct-58e22.firebaseapp.com",
-      projectId: "fmct-58e22",
-      storageBucket: "fmct-58e22.firebasestorage.app",
-      messagingSenderId: "479095036843",
-      appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
-    };
-
+   const firebaseConfig = {
+  apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
+  authDomain: "fmct-58e22.firebaseapp.com",
+  projectId: "fmct-58e22",
+  storageBucket: "fmct-58e22.firebasestorage.app",
+  messagingSenderId: "479095036843",
+  appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
+};
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
     document.getElementById("signupBtn").onclick = async function() {
-      const name = document.getElementById("name").value;   // ⭐ NEW
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
       const status = document.getElementById("status");
+
+      // ⭐ VALIDATION RULES
+      if (firstName.length < 2) {
+        status.innerHTML = "❌ First name must be at least 2 characters.";
+        return;
+      }
+
+      if (lastName.length < 2) {
+        status.innerHTML = "❌ Last name must be at least 2 characters.";
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        status.innerHTML = "❌ Enter a valid email address.";
+        return;
+      }
+
+      if (password.length < 8 || password.length > 20) {
+        status.innerHTML = "❌ Password must be 8–20 characters.";
+        return;
+      }
 
       status.innerHTML = "⏳ Creating account...";
 
@@ -85,9 +107,10 @@
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // ⭐ SAVE NAME IN FIRESTORE
+        // ⭐ SAVE FULL NAME IN FIRESTORE
         await db.collection("users").doc(user.uid).set({
-          name: name,
+          firstName: firstName,
+          lastName: lastName,
           email: email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
