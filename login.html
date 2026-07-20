@@ -5,7 +5,9 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #ffe9b3;
+      background: #fcecc0;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -13,41 +15,90 @@
     }
 
     .burger {
-      width: 350px;
+      width: 380px;
       text-align: center;
+      transform: scale(1.05);
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
     }
 
+    /* --- BUNS --- */
     .bun-top {
-      background: #f7c56f;
-      height: 70px;
-      border-radius: 50px 50px 20px 20px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-      margin-bottom: 10px;
+      background: linear-gradient(to bottom, #f9d27a, #e8b85c);
+      height: 130px;
+      border-radius: 200px 200px 60px 60px;
+      box-shadow: inset 0 -10px 0 rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .bun-bottom {
+      background: linear-gradient(to top, #f9d27a, #e8b85c);
+      height: 110px;
+      border-radius: 60px 60px 200px 200px;
+      box-shadow: inset 0 10px 0 rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+
+    /* --- LAYERS --- */
+    .layer {
+      width: 100%;
+      min-height: 60px;
+      padding: 15px 0;
+      margin: 18px 0;
+      border-radius: 40px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lettuce {
+      background: repeating-linear-gradient(
+        45deg,
+        #9be27c,
+        #9be27c 10px,
+        #8bd66b 10px,
+        #8bd66b 20px
+      );
     }
 
     .tomato {
-      background: #ff6b6b;
-      color: white;
-      border-radius: 20px;
-      padding: 12px;
-      font-size: 18px;
-      margin: 10px 0;
-      width: 100%;
-      border: none;
+      background: radial-gradient(circle at 30% 30%, #ff7b7b, #ff4d4d);
     }
 
     .cheese {
-      background: #ffd84d;
-      border-radius: 15px;
-      padding: 12px;
-      font-size: 18px;
-      margin: 10px 0;
-      width: 100%;
-      border: none;
+      background: linear-gradient(to right, #ffd84d, #ffcc33);
     }
 
+    .patty {
+      background: repeating-linear-gradient(
+        45deg,
+        #7a3f1a,
+        #7a3f1a 8px,
+        #5a2e00 8px,
+        #5a2e00 16px
+      );
+      border-radius: 30px;
+      height: 65px;
+      margin: 20px 0;
+    }
+
+    /* --- INPUTS --- */
+    .ingredient-input {
+      width: 80%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      background: rgba(255,255,255,0.9);
+      text-align: center;
+      font-weight: bold;
+      color: #5a2e00;
+    }
+
+    /* --- BUTTON --- */
     .login-btn {
-      background: #ff4d4d;
+      background: radial-gradient(circle at 30% 30%, #ff7b7b, #ff4d4d);
       color: white;
       padding: 14px;
       width: 90%;
@@ -56,9 +107,10 @@
       font-size: 20px;
       font-weight: bold;
       cursor: pointer;
-      margin: 15px auto;
+      margin: 20px auto;
       display: block;
       transition: 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
     }
 
     .login-btn:hover {
@@ -66,18 +118,11 @@
       transform: scale(1.05);
     }
 
-    .bun-bottom {
-      background: #f7c56f;
-      height: 60px;
-      border-radius: 20px 20px 50px 50px;
-      margin-top: 10px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-    }
-
     #status {
-      margin-top: 10px;
+      margin-top: 20px;
       font-weight: bold;
       color: #5a2e00;
+      text-align: center;
     }
   </style>
 </head>
@@ -88,22 +133,29 @@
 
     <div class="bun-top"></div>
 
-    <input class="tomato" id="email" type="email" placeholder="Email (tomato)">
-    <input class="cheese" id="password" type="password" placeholder="Password (cheese)">
+    <div class="layer tomato">
+      <input class="ingredient-input" type="email" id="email" placeholder="Email">
+    </div>
 
-    <button class="login-btn" onclick="login()">🍅 Login 🍅</button>
+    <div class="layer cheese">
+      <input class="ingredient-input" type="password" id="password" placeholder="Password (8–20 chars)">
+    </div>
 
-    <p id="status"></p>
+    <button class="login-btn" id="loginBtn">Login</button>
 
+    <div class="patty"></div>
     <div class="bun-bottom"></div>
-
   </div>
 
+  <p id="status"></p>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
-const firebaseConfig = {
+   const firebaseConfig = {
   apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
   authDomain: "fmct-58e22.firebaseapp.com",
   projectId: "fmct-58e22",
@@ -111,25 +163,27 @@ const firebaseConfig = {
   messagingSenderId: "479095036843",
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+    document.getElementById("loginBtn").onclick = async function() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
       const status = document.getElementById("status");
 
-      status.innerHTML = "⏳ Toasting your login...";
+      if (!email.includes("@") || !email.includes(".")) return status.innerHTML = "❌ Invalid email!";
+      if (password.length < 8 || password.length > 20) return status.innerHTML = "❌ Password must be 8–20 chars!";
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          status.innerHTML = "🍔 Logged in! Redirecting...";
-          setTimeout(() => window.location.href = "index.html", 1000);
-        })
-        .catch(err => status.innerHTML = "❌ " + err.message);
-    }
+      status.innerHTML = "⏳ Logging in...";
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        status.innerHTML = "🍔 Logged in! Redirecting...";
+        setTimeout(() => window.location.href = "index.html", 1000);
+      } catch (error) {
+        status.innerHTML = "❌ " + error.message;
+      }
+    };
   </script>
-
 </body>
 </html>
