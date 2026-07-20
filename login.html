@@ -1,29 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
-    <style>
-        body { font-family: Arial; text-align: center; background: #ffe9b3; padding: 40px; }
-        input { padding: 10px; width: 250px; margin: 10px; border-radius: 8px; border: 2px solid #ff9900; }
-        button { padding: 12px 20px; background: #ffcc33; border: 2px solid #ff9900; border-radius: 12px; font-weight: bold; }
-    </style>
+  <title>FMCT Burger Login</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #ffe9b3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .burger {
+      width: 350px;
+      text-align: center;
+    }
+
+    .bun-top {
+      background: #f7c56f;
+      height: 70px;
+      border-radius: 50px 50px 20px 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
+    }
+
+    .tomato {
+      background: #ff6b6b;
+      color: white;
+      border-radius: 20px;
+      padding: 12px;
+      font-size: 18px;
+      margin: 10px 0;
+      width: 100%;
+      border: none;
+    }
+
+    .cheese {
+      background: #ffd84d;
+      border-radius: 15px;
+      padding: 12px;
+      font-size: 18px;
+      margin: 10px 0;
+      width: 100%;
+      border: none;
+    }
+
+    .login-btn {
+      background: #ff4d4d;
+      color: white;
+      padding: 14px;
+      width: 90%;
+      border-radius: 20px;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 15px auto;
+      display: block;
+      transition: 0.2s;
+    }
+
+    .login-btn:hover {
+      background: #ff7373;
+      transform: scale(1.05);
+    }
+
+    .bun-bottom {
+      background: #f7c56f;
+      height: 60px;
+      border-radius: 20px 20px 50px 50px;
+      margin-top: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #5a2e00;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Login</h2>
+  <div class="burger">
 
-<input id="email" placeholder="Email">
-<input id="password" placeholder="Password" type="password">
-<button onclick="login()">Login</button>
+    <div class="bun-top"></div>
 
-<p><a href="signup.html">Create an account</a></p>
+    <input class="tomato" id="email" type="email" placeholder="Email (tomato)">
+    <input class="cheese" id="password" type="password" placeholder="Password (cheese)">
+
+    <button class="login-btn" onclick="login()">🍅 Login 🍅</button>
+
+    <p id="status"></p>
+
+    <div class="bun-bottom"></div>
+
+  </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-<script>
+  <script>
 const firebaseConfig = {
   apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
   authDomain: "fmct-58e22.firebaseapp.com",
@@ -32,26 +111,25 @@ const firebaseConfig = {
   messagingSenderId: "479095036843",
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
-firebase.initializeApp(firebaseConfig);
-// const auth = firebase.auth();
 
-        // 🔹 Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore();
 
-function login() {
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const status = document.getElementById("status");
 
-    auth.signInWithEmailAndPassword(email, pass)
+      status.innerHTML = "⏳ Toasting your login...";
+
+      auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-            window.location.href = "index.html";  // silent redirect
+          status.innerHTML = "🍔 Logged in! Redirecting...";
+          setTimeout(() => window.location.href = "index.html", 1000);
         })
-        .catch(err => alert("❌ " + err.message));
-}
-
-</script>
+        .catch(err => status.innerHTML = "❌ " + err.message);
+    }
+  </script>
 
 </body>
 </html>
