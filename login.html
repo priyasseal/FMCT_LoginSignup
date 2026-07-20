@@ -46,12 +46,11 @@ function login() {
 
     auth.signInWithEmailAndPassword(email, pass)
         .then(() => {
-            // alert("Login successful!"); -- Redirect silently
-            window.location.href = "index.html";
+            window.location.href = "index.html";  // silent redirect
         })
         .catch(err => alert("❌ " + err.message));
-            
 }
+
 </script>
 
 </body>
