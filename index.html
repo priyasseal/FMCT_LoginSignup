@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Demo</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #ffe9b3;
+            padding: 40px;
+        }
+        .button {
+            display: block;
+            margin: 15px auto;
+            padding: 14px;
+            width: 250px;
+            background-color: #ffcc33;
+            color: #5a2e00;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            border: 2px solid #ff9900;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Welcome</h1>
+    <p id="userStatus">Checking login status...</p>
+
+    <a id="loginBtn" class="button" href="login.html">Login</a>
+    <a id="signupBtn" class="button" href="signup.html">Sign Up</a>
+    <button id="logoutBtn" class="button" style="display:none;">Logout</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
+  authDomain: "fmct-58e22.firebaseapp.com",
+  projectId: "fmct-58e22",
+  storageBucket: "fmct-58e22.firebasestorage.app",
+  messagingSenderId: "479095036843",
+  appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+auth.onAuthStateChanged(user => {
+    const userStatus = document.getElementById("userStatus");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (user) {
+        userStatus.innerHTML = "Logged in as: " + user.email;
+        loginBtn.style.display = "none";
+        signupBtn.style.display = "none";
+        logoutBtn.style.display = "block";
+    } else {
+        userStatus.innerHTML = "You are not logged in.";
+        loginBtn.style.display = "block";
+        signupBtn.style.display = "block";
+        logoutBtn.style.display = "none";
+    }
+});
+
+document.getElementById("logoutBtn").onclick = function() {
+    auth.signOut();
+};
+</script>
+
+</body>
+</html>
