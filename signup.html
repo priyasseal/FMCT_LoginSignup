@@ -1,51 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sign Up</title>
-    <style>
-        body { font-family: Arial; text-align: center; background: #ffe9b3; padding: 40px; }
-        input { padding: 10px; width: 250px; margin: 10px; border-radius: 8px; border: 2px solid #ff9900; }
-        button { padding: 12px 20px; background: #ffcc33; border: 2px solid #ff9900; border-radius: 12px; font-weight: bold; }
-    </style>
+  <title>FMCT Sign Up</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #ffe9b3;
+      padding: 40px;
+    }
+    h1 {
+      color: #5a2e00;
+    }
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 12px;
+      width: 250px;
+      border: 2px solid #ff9900;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 14px;
+      width: 250px;
+      background-color: #ffcc33;
+      color: #5a2e00;
+      font-weight: bold;
+      border-radius: 12px;
+      border: 2px solid #ff9900;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
+  <h1>Create Your FMCT Account</h1>
 
-<h2>Create Account</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button id="signupBtn">Sign Up</button>
 
-<input id="email" placeholder="Email">
-<input id="password" placeholder="Password" type="password">
-<button onclick="signup()">Sign Up</button>
+  <p id="status"></p>
 
-<p><a href="login.html">Already have an account?</a></p>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+  <script>
+    // 🔹 Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
+      authDomain: "fmct-58e22.firebaseapp.com",
+      projectId: "fmct-58e22",
+      storageBucket: "fmct-58e22.firebasestorage.app",
+      messagingSenderId: "479095036843",
+      appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
+    };
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
-  authDomain: "fmct-58e22.firebaseapp.com",
-  projectId: "fmct-58e22",
-  storageBucket: "fmct-58e22.firebasestorage.app",
-  messagingSenderId: "479095036843",
-  appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+    // 🔹 Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-function signup() {
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
+    // 🔹 Handle signup
+    document.getElementById("signupBtn").onclick = async function() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const status = document.getElementById("status");
 
-    auth.createUserWithEmailAndPassword(email, pass)
-        .then(() => {
-            alert("Account created!");
-            window.location.href = "login.html";
-        })
-        .catch(err => alert(err.message));
-}
-</script>
+      try {
+        // Create user in Firebase Auth
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
 
+        // Save user info in Firestore
+        await db.collection("users").doc(user.uid).set({
+          email: email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        status.innerHTML = "✅ Signup successful! Redirecting...";
+        setTimeout(() => window.location.href = "index.html", 1500);
+      } catch (error) {
+        status.innerHTML = "❌ " + error.message;
+      }
+    };
+  </script>
 </body>
 </html>
