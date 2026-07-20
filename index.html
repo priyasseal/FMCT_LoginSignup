@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-    <!-- rebuild trigger -->
 <head>
-    <title>Login Demo</title>
+    <title>FMCT Home</title>
     <style>
         body {
             font-family: Arial;
@@ -28,51 +27,66 @@
 
 <body>
 
-    <h1>Welcome</h1>
+    <h1 id="welcomeText">Welcome</h1>
     <p id="userStatus">Checking login status...</p>
 
     <a id="loginBtn" class="button" href="login.html">Login</a>
     <a id="signupBtn" class="button" href="signup.html">Sign Up</a>
     <button id="logoutBtn" class="button" style="display:none;">Logout</button>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
-  authDomain: "fmct-58e22.firebaseapp.com",
-  projectId: "fmct-58e22",
-  storageBucket: "fmct-58e22.firebasestorage.app",
-  messagingSenderId: "479095036843",
-  appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
+            authDomain: "fmct-58e22.firebaseapp.com",
+            projectId: "fmct-58e22",
+            storageBucket: "fmct-58e22.firebasestorage.app",
+            messagingSenderId: "479095036843",
+            appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
+        };
 
-auth.onAuthStateChanged(user => {
-    const userStatus = document.getElementById("userStatus");
-    const loginBtn = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-    if (user) {
-        userStatus.innerHTML = "Logged in as: " + user.email;
-        loginBtn.style.display = "none";
-        signupBtn.style.display = "none";
-        logoutBtn.style.display = "block";
-    } else {
-        userStatus.innerHTML = "You are not logged in.";
-        loginBtn.style.display = "block";
-        signupBtn.style.display = "block";
-        logoutBtn.style.display = "none";
-    }
-});
+        auth.onAuthStateChanged(async user => {
+            const userStatus = document.getElementById("userStatus");
+            const welcomeText = document.getElementById("welcomeText");
+            const loginBtn = document.getElementById("loginBtn");
+            const signupBtn = document.getElementById("signupBtn");
+            const logoutBtn = document.getElementById("logoutBtn");
 
-document.getElementById("logoutBtn").onclick = function() {
-    auth.signOut();
-};
-</script>
+            if (user) {
+                // Fetch user data from Firestore
+                const doc = await db.collection("users").doc(user.uid).get();
+                const data = doc.data();
+
+                const name = data?.name || user.email;
+
+                welcomeText.innerHTML = `Welcome, ${name}!`;
+                userStatus.innerHTML = `Logged in as: ${user.email}`;
+
+                loginBtn.style.display = "none";
+                signupBtn.style.display = "none";
+                logoutBtn.style.display = "block";
+            } else {
+                welcomeText.innerHTML = "Welcome";
+                userStatus.innerHTML = "You are not logged in.";
+
+                loginBtn.style.display = "block";
+                signupBtn.style.display = "block";
+                logoutBtn.style.display = "none";
+            }
+        });
+
+        document.getElementById("logoutBtn").onclick = function() {
+            auth.signOut();
+        };
+    </script>
 
 </body>
 </html>
