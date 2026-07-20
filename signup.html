@@ -1,59 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FMCT Sign Up</title>
+  <title>FMCT Burger Sign Up</title>
   <style>
     body {
-      font-family: Arial;
-      text-align: center;
+      font-family: 'Arial', sans-serif;
       background: #ffe9b3;
-      padding: 40px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    h1 {
-      color: #5a2e00;
+
+    .burger {
+      width: 380px;
+      text-align: center;
     }
-    input {
-      display: block;
-      margin: 10px auto;
-      padding: 12px;
-      width: 250px;
-      border: 2px solid #ff9900;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-    button {
-      display: block;
-      margin: 20px auto;
-      padding: 14px;
-      width: 250px;
-      background-color: #ffcc33;
-      color: #5a2e00;
-      font-weight: bold;
-      border-radius: 12px;
-      border: 2px solid #ff9900;
+
+    .layer {
+      width: 100%;
+      padding: 18px;
+      margin: -5px 0;
+      border-radius: 25px;
       font-size: 18px;
-      cursor: pointer;
+      border: none;
+      outline: none;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
-    #status {
-      margin-top: 15px;
+
+    .bun-top {
+      background: #f7c56f;
+      height: 70px;
+      border-radius: 50px 50px 20px 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
+    }
+
+    .lettuce {
+      background: #9be27c;
+      border-radius: 20px;
+      padding: 12px;
+      font-weight: bold;
+      color: #2d4f1e;
+    }
+
+    .tomato {
+      background: #ff6b6b;
+      color: white;
+      border-radius: 20px;
+      padding: 12px;
+      font-weight: bold;
+    }
+
+    .cheese {
+      background: #ffd84d;
+      border-radius: 15px;
+      padding: 12px;
       font-weight: bold;
       color: #5a2e00;
+    }
+
+    .patty {
+      background: #8b4513;
+      color: #ffe9b3;
+      border-radius: 20px;
+      padding: 12px;
+      font-weight: bold;
+    }
+
+    .bun-bottom {
+      background: #f7c56f;
+      height: 60px;
+      border-radius: 20px 20px 50px 50px;
+      margin-top: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .signup-btn {
+      background: #ff4d4d;
+      color: white;
+      padding: 14px;
+      width: 90%;
+      border-radius: 20px;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 15px auto;
+      display: block;
+      transition: 0.2s;
+    }
+
+    .signup-btn:hover {
+      background: #ff7373;
+      transform: scale(1.05);
+    }
+
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #ffe9b3;
     }
   </style>
 </head>
 
 <body>
-  <h1>Create Your FMCT Account</h1>
 
-  <!-- ⭐ NEW FIELDS -->
-  <input type="text" id="firstName" placeholder="First Name">
-  <input type="text" id="lastName" placeholder="Last Name">
+  <div class="burger">
 
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password (8–20 chars)">
-  <button id="signupBtn">Sign Up</button>
+    <div class="bun-top"></div>
 
-  <p id="status"></p>
+    <input class="layer lettuce" type="text" id="firstName" placeholder="First Name (lettuce)">
+    <input class="layer lettuce" type="text" id="lastName" placeholder="Last Name (lettuce)">
+    <input class="layer tomato" type="email" id="email" placeholder="Email (tomato)">
+    <input class="layer cheese" type="password" id="password" placeholder="Password (cheese)">
+
+    <button class="signup-btn" id="signupBtn">🍅 Sign Up 🍅</button>
+
+    <div class="patty" id="status">Status Patty</div>
+
+    <div class="bun-bottom"></div>
+
+  </div>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -69,6 +141,7 @@
   messagingSenderId: "479095036843",
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -80,42 +153,25 @@
       const password = document.getElementById("password").value.trim();
       const status = document.getElementById("status");
 
-      // ⭐ VALIDATION RULES
-      if (firstName.length < 2) {
-        status.innerHTML = "❌ First name must be at least 2 characters.";
-        return;
-      }
+      if (firstName.length < 2) return status.innerHTML = "❌ First name too short!";
+      if (lastName.length < 2) return status.innerHTML = "❌ Last name too short!";
+      if (!email.includes("@") || !email.includes(".")) return status.innerHTML = "❌ Invalid email!";
+      if (password.length < 8 || password.length > 20) return status.innerHTML = "❌ Password must be 8–20 chars!";
 
-      if (lastName.length < 2) {
-        status.innerHTML = "❌ Last name must be at least 2 characters.";
-        return;
-      }
-
-      if (!email.includes("@") || !email.includes(".")) {
-        status.innerHTML = "❌ Enter a valid email address.";
-        return;
-      }
-
-      if (password.length < 8 || password.length > 20) {
-        status.innerHTML = "❌ Password must be 8–20 characters.";
-        return;
-      }
-
-      status.innerHTML = "⏳ Creating account...";
+      status.innerHTML = "⏳ Cooking your account...";
 
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // ⭐ SAVE FULL NAME IN FIRESTORE
         await db.collection("users").doc(user.uid).set({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
+          firstName,
+          lastName,
+          email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        status.innerHTML = "✅ Signup successful! Redirecting...";
+        status.innerHTML = "🍔 Account ready! Redirecting...";
         setTimeout(() => window.location.href = "index.html", 1000);
 
       } catch (error) {
@@ -123,5 +179,6 @@
       }
     };
   </script>
+
 </body>
 </html>
