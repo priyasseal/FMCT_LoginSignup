@@ -5,7 +5,7 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #ffe9b3;
+      background: #fcecc0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,16 +17,16 @@
       text-align: center;
     }
 
-    .bun-top {
-      background: #f7c56f;
+    .bun-top, .bun-bottom {
+      background: linear-gradient(to bottom, #f9d27a, #e8b85c);
       height: 80px;
-      border-radius: 50px 50px 20px 20px;
+      border-radius: 50px;
       box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
 
     .patty {
-      background: #8b4513;
+      background: #7a3f1a;
       color: #ffe9b3;
       border-radius: 20px;
       padding: 20px;
@@ -53,53 +53,38 @@
       color: white;
     }
 
-    .tomato-btn:hover {
-      background: #ff8a8a;
-      transform: scale(1.05);
-    }
-
     .cheese-btn {
       background: #ffd84d;
       color: #5a2e00;
     }
 
-    .cheese-btn:hover {
-      background: #ffe27f;
+    .tomato-btn:hover, .cheese-btn:hover {
       transform: scale(1.05);
-    }
-
-    .bun-bottom {
-      background: #f7c56f;
-      height: 70px;
-      border-radius: 20px 20px 50px 50px;
-      margin-top: 10px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 
 <body>
-
   <div class="burger">
-
     <div class="bun-top"></div>
 
     <div class="patty" id="welcomeText">Welcome!</div>
     <div class="patty" id="userStatus">Checking login status...</div>
 
-    <a class="tomato-btn" id="loginBtn" href="login.html">🍅 Login</a>
-    <a class="cheese-btn" id="signupBtn" href="signup.html">🧀 Sign Up</a>
-    <button class="tomato-btn" id="logoutBtn" style="display:none;">🍅 Logout</button>
+    <button class="tomato-btn" id="loginBtn">Login</button>
+    <button class="cheese-btn" id="signupBtn">Sign Up</button>
+    <button class="tomato-btn" id="logoutBtn" style="display:none;">Logout</button>
 
     <div class="bun-bottom"></div>
-
   </div>
 
+  <!-- ✅ Make sure your code is inside <script> tags -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-const firebaseConfig = {
+  <script>
+     const firebaseConfig = {
   apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
   authDomain: "fmct-58e22.firebaseapp.com",
   projectId: "fmct-58e22",
@@ -107,6 +92,7 @@ const firebaseConfig = {
   messagingSenderId: "479095036843",
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -121,20 +107,15 @@ const firebaseConfig = {
       if (user) {
         const doc = await db.collection("users").doc(user.uid).get();
         const data = doc.data();
-
         const fullName = `${data.firstName} ${data.lastName}`;
-
         welcomeText.innerHTML = `🍔 Welcome, ${fullName}!`;
         userStatus.innerHTML = `Logged in as: ${data.email}`;
-
         loginBtn.style.display = "none";
         signupBtn.style.display = "none";
         logoutBtn.style.display = "block";
-
       } else {
         welcomeText.innerHTML = "Welcome!";
         userStatus.innerHTML = "You are not logged in.";
-
         loginBtn.style.display = "block";
         signupBtn.style.display = "block";
         logoutBtn.style.display = "none";
@@ -145,6 +126,5 @@ const firebaseConfig = {
       auth.signOut();
     };
   </script>
-
 </body>
 </html>
