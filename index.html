@@ -61,11 +61,18 @@
             const logoutBtn = document.getElementById("logoutBtn");
 
             if (user) {
-                // Fetch user data from Firestore
-                const doc = await db.collection("users").doc(user.uid).get();
-                const data = doc.data();
+                console.log("Auth state changed:", user); // Debugging line
 
-                const name = data?.name || user.email;
+                let name = user.email; // Default fallback
+                try {
+                    const doc = await db.collection("users").doc(user.uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        name = data?.name || user.email;
+                    }
+                } catch (e) {
+                    console.error("Firestore error:", e);
+                }
 
                 welcomeText.innerHTML = `Welcome, ${name}!`;
                 userStatus.innerHTML = `Logged in as: ${user.email}`;
@@ -74,6 +81,7 @@
                 signupBtn.style.display = "none";
                 logoutBtn.style.display = "block";
             } else {
+                console.log("No user logged in."); // Debugging line
                 welcomeText.innerHTML = "Welcome";
                 userStatus.innerHTML = "You are not logged in.";
 
