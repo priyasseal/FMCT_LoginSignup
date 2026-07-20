@@ -21,13 +21,60 @@
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
     }
 
-    /* --- MATCHING BUNS --- */
+    /* --- BURGER LAYERS --- */
     .bun-top {
       background: linear-gradient(to bottom, #f9d27a, #e8b85c);
       height: 130px;
       border-radius: 200px 200px 60px 60px;
       box-shadow: inset 0 -10px 0 rgba(0,0,0,0.1);
       margin-bottom: 20px;
+    }
+
+    .layer {
+      width: 100%;
+      min-height: 60px;
+      height: auto;
+      padding: 15px 0;
+      margin: 18px 0;
+      border-radius: 40px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lettuce {
+      background: repeating-linear-gradient(
+        45deg,
+        #9be27c,
+        #9be27c 10px,
+        #8bd66b 10px,
+        #8bd66b 20px
+      );
+    }
+
+    .tomato {
+      background: radial-gradient(circle at 30% 30%, #ff7b7b, #ff4d4d);
+    }
+
+    .cheese {
+      background: linear-gradient(to right, #ffd84d, #ffcc33);
+    }
+
+    .patty {
+      background: repeating-linear-gradient(
+        45deg,
+        #7a3f1a,
+        #7a3f1a 8px,
+        #5a2e00 8px,
+        #5a2e00 16px
+      );
+      border-radius: 30px;
+      height: 65px;
+      margin: 20px 0;
+      color: #ffe9b3;
+      font-weight: bold;
+      font-size: 18px;
     }
 
     .bun-bottom {
@@ -38,24 +85,7 @@
       margin-top: 20px;
     }
 
-    /* --- MATCHING PATTY --- */
-    .patty {
-      background: repeating-linear-gradient(
-        45deg,
-        #7a3f1a,
-        #7a3f1a 8px,
-        #5a2e00 8px,
-        #5a2e00 16px
-      );
-      border-radius: 30px;
-      padding: 20px;
-      margin: 18px 0;
-      color: #ffe9b3;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    /* --- MATCHING BUTTONS --- */
+    /* --- BUTTONS --- */
     .tomato-btn {
       background: radial-gradient(circle at 30% 30%, #ff7b7b, #ff4d4d);
       color: white;
@@ -92,25 +122,38 @@
     .cheese-btn:hover {
       transform: scale(1.05);
     }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #5a2e00;
+      text-align: center;
+    }
   </style>
 </head>
 
 <body>
 
   <div class="burger">
-
     <div class="bun-top"></div>
 
-    <div class="patty" id="welcomeText">Welcome!</div>
-    <div class="patty" id="userStatus">Checking login status...</div>
+    <div class="layer lettuce">
+      <div id="welcomeText">Welcome!</div>
+    </div>
+
+    <div class="layer lettuce">
+      <div id="userStatus">Checking login status...</div>
+    </div>
 
     <button class="tomato-btn" id="loginBtn">Login</button>
     <button class="cheese-btn" id="signupBtn">Sign Up</button>
     <button class="tomato-btn" id="logoutBtn" style="display:none;">Logout</button>
 
+    <div class="patty"></div>
     <div class="bun-bottom"></div>
-
   </div>
+
+  <p id="status"></p>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -118,7 +161,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
-   const firebaseConfig = {
+    const firebaseConfig = {
   apiKey: "AIzaSyAZVkqvd1HJaAFA9JjUsk3HuYahO7-m_qc",
   authDomain: "fmct-58e22.firebaseapp.com",
   projectId: "fmct-58e22",
@@ -126,7 +169,6 @@
   messagingSenderId: "479095036843",
   appId: "1:479095036843:web:e800df57bb2b01f5f4d0ee"
 };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -145,14 +187,12 @@
 
         welcomeText.innerHTML = `🍔 Welcome, ${fullName}!`;
         userStatus.innerHTML = `Logged in as: ${data.email}`;
-
         loginBtn.style.display = "none";
         signupBtn.style.display = "none";
         logoutBtn.style.display = "block";
       } else {
         welcomeText.innerHTML = "Welcome!";
         userStatus.innerHTML = "You are not logged in.";
-
         loginBtn.style.display = "block";
         signupBtn.style.display = "block";
         logoutBtn.style.display = "none";
@@ -163,6 +203,5 @@
       auth.signOut();
     };
   </script>
-
 </body>
 </html>
